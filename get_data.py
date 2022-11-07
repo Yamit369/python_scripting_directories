@@ -21,6 +21,19 @@ def find_games_path(source):
         break
     return game_paths
 
+def get_name_from_paths(paths, to_simplify):
+    new_name = []
+    for path in paths:
+        _, dir_name = os.path.split(path)
+        new_dir_name = dir_name.replace(to_simplify, "")
+        new_name.append(new_dir_name)
+
+    return new_name 
+
+
+def create_directory(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 def main(source, earmark):
     pwd = os.getcwd()
@@ -28,7 +41,9 @@ def main(source, earmark):
     earmark_path = os.path.join(pwd, earmark)
 
     game_paths = find_games_path(source_path)
-    print(game_paths)
+    new_game_dirs = get_name_from_paths(game_paths, "game")
+    print(new_game_dirs)
+    create_directory(earmark_path)
 
 
 
