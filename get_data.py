@@ -40,6 +40,16 @@ def copy_and_overwrite(source, destination):
         shutil.rmtree(destination)
     shutil.copytree(source, destination)
 
+
+def json_file_metadata(path, game_dirs):
+    data = {
+        "gamesNames": game_dirs,
+        "numberOfGames": len(game_dirs)
+    }
+    with open(path, "w") as f:
+        json.dump(data, f)
+
+
 def main(source, earmark):
     pwd = os.getcwd()
     source_path = os.path.join(pwd, source)
@@ -55,8 +65,8 @@ def main(source, earmark):
 
     create_directory(earmark_path)
 
-
-
+    json_path = os.path.join(earmark_path, "metadata.json")
+    json_file_metadata(json_path, new_game_dirs)
 
 
 if __name__ == "__main__":
