@@ -35,14 +35,24 @@ def create_directory(path):
     if not os.path.exists(path):
         os.mkdir(path)
 
+def copy_and_overwrite(source, destination):
+    if os.path.exists(destination):
+        shutil.rmtree(destination)
+    shutil.copytree(source, destination)
+
 def main(source, earmark):
     pwd = os.getcwd()
     source_path = os.path.join(pwd, source)
     earmark_path = os.path.join(pwd, earmark)
 
     game_paths = find_games_path(source_path)
-    new_game_dirs = get_name_from_paths(game_paths, "game")
-    print(new_game_dirs)
+    new_game_dirs = get_name_from_paths(game_paths, "_game")
+    
+
+    for src, destination in zip(game_paths, new_game_dirs):
+        destination = os.path.join(earmark, destination)
+        copy_and_overwrite(src, destination)
+
     create_directory(earmark_path)
 
 
