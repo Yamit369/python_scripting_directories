@@ -6,6 +6,7 @@ import sys
 
 
 GAME_DIR_PATTERN = "game"
+GAME_CODE_EXTENSION = ".go"
 
 
 def find_games_path(source):
@@ -48,6 +49,19 @@ def json_file_metadata(path, game_dirs):
     }
     with open(path, "w") as f:
         json.dump(data, f)
+
+
+def compile_game_code(path):
+    code_file_name = None
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            if GAME_CODE_EXTENSION in file:
+                code_file_name = file
+                break
+
+
+        break
+
 
 
 def main(source, earmark):
