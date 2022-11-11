@@ -7,7 +7,7 @@ import sys
 
 GAME_DIR_PATTERN = "game"
 GAME_CODE_EXTENSION = ".go"
-
+GAME_COMPILE_COMMAND = ["go", "build"]
 
 def find_games_path(source):
     game_paths = []
@@ -55,14 +55,27 @@ def compile_game_code(path):
     code_file_name = None
     for root, dirs, files in os.walk(path):
         for file in files:
-            if GAME_CODE_EXTENSION in file:
+            if file.endswith(GAME_CODE_EXTENSION):
                 code_file_name = file
                 break
 
 
         break
 
+    if code_file_name is None:
+        return
+    
+    command = GAME_COMPILE_COMMAND + [code_file_name]
+    run_command(command, path)
 
+def run_command(command, path):
+    pwd = os.getcwd()
+    os.chdir(path)
+
+    result = run(command, stdout=PIPE, stdin=PIPE, universal_newlines=True)
+    print(f'Compile Result: {result}')
+
+    os.chdir(pwd)
 
 def main(source, earmark):
     pwd = os.getcwd()
@@ -76,6 +89,7 @@ def main(source, earmark):
     for src, destination in zip(game_paths, new_game_dirs):
         destination = os.path.join(earmark, destination)
         copy_and_overwrite(src, destination)
+        compile_game_code(destination)
 
     create_directory(earmark_path)
 
